@@ -1,11 +1,13 @@
 
 package kata5.main;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -21,16 +23,29 @@ public class Kata5 {
         
         Statement st= con.createStatement();
         
-        String query = "SELECT * FROM PEOPLE";
-        ResultSet rs = st.executeQuery(query);
-        while(rs.next()){
-            System.out.println(rs.getInt(1));
-            System.out.println(rs.getString(2));
-        }
         String query2 ="CREATE TABLE IF NOT EXISTS MAIL ('Id' INTEGER PRIMARY KEY AUTOINCREMENT, Mail TEXT	NOT NULL);";
         st.execute(query2);
-        
-        
+        String fileName = "C:\\Users\\ALE\\Documents\\NetBeansProjectsm\\Kata5P1\\emailsfile.txt";
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
+            String mail;
+            while((mail = reader.readLine()) != null){
+                if(!mail.contains("@")){
+                    continue;
+                }
+                query2 = "INSERT INTO MAIL (Mail) VALUES ('"+mail+"');";	
+                st.executeUpdate(query2);
+              
+            }
+            System.out.println("Fin OK");
+
+
+
+        }catch(FileNotFoundException ex){
+            ex.printStackTrace( );
+        }
+
+
         
     }
 }
